@@ -1,33 +1,35 @@
-pipeline{
-    agent any
+pipeline {
+  agent any
+  stages {
+    stage('build') {
+      steps {
+        echo 'compile sysfoo app....'
+        sh 'mvn compile'
+      }
+    }
 
-    tools{
-      maven 'Maven 3.9.6'
+    stage('test') {
+      steps {
+        echo 'running unit tests.....'
+        sh 'mvn clean test'
+      }
     }
-    stages{
-        stage('build'){
-            steps  {
-                echo 'compile sysfoo app....'
-                sh 'mvn compile'
-            }
-        }
-        stage('test'){
-            steps{
-                echo 'running unit tests.....'
-                sh 'mvn clean test'
-            }
-        }
-        stage('package'){
-            steps{
-                echo 'packaging the app.....'
-                sh 'mvn package -DskipTests'
-            }
-        }
+
+    stage('package') {
+      steps {
+        echo 'packaging the app.....'
+        sh 'mvn package -DskipTests'
+      }
     }
-    post{
-        always{
-            echo 'This pipeline is completeg..'
-        }
+
+  }
+  tools {
+    maven 'Maven 3.9.6'
+  }
+  post {
+    always {
+      echo 'This pipeline is completeg..'
     }
-    
+
+  }
 }
